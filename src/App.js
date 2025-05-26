@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./App.css";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -15,11 +16,9 @@ function App() {
 
     try {
       const res = await fetch(
-          `http://localhost:8080/v1/search?q=${encodeURIComponent(query)}&p=${pageNumber}`
+        `http://localhost:8080/v1/search?q=${encodeURIComponent(query)}&p=${pageNumber}`
       );
-      if (!res.ok) {
-        throw new Error(`Erro HTTP: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
       const data = await res.json();
       setResults(data);
     } catch (err) {
@@ -29,7 +28,6 @@ function App() {
       setLoading(false);
     }
   };
-
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -42,63 +40,88 @@ function App() {
     fetchResults(newPage);
   };
 
+  function highlightMatches(text, query) {
+    if (!query) return text;
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escapa caracteres especiais
+    const regex = new RegExp(`(${escapedQuery})`, "gi");
+    return text.replace(regex, "<strong>$1</strong>");
+  }
+
   return (
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: 20 }}>
-        <h1>Busca Elasticsearch</h1>
-        <form onSubmit={handleSearch} style={{ marginBottom: 20 }}>
-          <input
-              type="text"
-              placeholder="Digite sua consulta"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              style={{ width: "70%", padding: 8, marginRight: 8 }}
-          />
-          <button type="submit" disabled={loading}>
-            Buscar
-          </button>
-        </form>
+    <div className="app-container">
+      <h1>Search Engine</h1>
+      <form onSubmit={handleSearch} className="search-form">
+        <input
+          type="text"
+          placeholder="Digite sua consulta"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button type="submit" disabled={loading}>
+          Buscar
+        </button>
+      </form>
 
-        {loading && <p>Carregando...</p>}
+      {loading && <p className="loading">Carregando...</p>}
+      {error && <p className="error">Erro: {error}</p>}
 
-        {error && <p style={{ color: "red" }}>Erro: {error}</p>}
+      {results && (
+        <>
+          <p className="pagination-info">
+            Página {results.page} de {Math.ceil(results.totalResults / 10) || 1} — Total: {results.totalResults} resultados
+          </p>
 
-        {results && (
-            <>
-              <p>
-                Página {results.page} de{" "}
-                {Math.ceil(results.totalResults / 10) || 1} — Total:{" "}
-                {results.totalResults} resultados
-              </p>
+          <ul className="results-list">
+            {results.resultsList.map((item, idx) => (
+              <li key={idx} className="result-item">
+                <a href={item.url} target="_blank" rel="noreferrer">
+                  <h3>{item.title}</h3>
+                </a>
+                <p dangerouslySetInnerHTML={{ __html: highlightMatches(item.content, query) }} />
+              </li>
+            ))}
+          </ul>
 
-              <ul>
-                {results.resultsList.map((item, idx) => (
-                    <li key={idx} style={{ marginBottom: 16 }}>
-                      <a href={item.url} target="_blank" rel="noreferrer">
-                        <h3>{item.title}</h3>
-                      </a>
-                      <p>{item.content}</p>
-                    </li>
-                ))}
-              </ul>
+          <div className="pagination">
+            {results.page > 1 && (
+              <button onClick={() => handlePageChange(results.page - 1)}>
+                ◀ Anterior
+              </button>
+            )}
 
-              <div style={{ marginTop: 20 }}>
-                {results.page > 1 && (
-                    <button onClick={() => handlePageChange(results.page - 1)}>
-                      Anterior
-                    </button>
-                )}
-                {results.page * 10 < results.totalResults && (
+            {Array.from({ length: Math.ceil(results.totalResults / 10) }, (_, i) => i + 1)
+              .filter(p =>
+                // mostra sempre 2 antes e 2 depois da página atual
+                p === 1 || 
+                p === Math.ceil(results.totalResults / 10) || 
+                Math.abs(p - results.page) <= 2
+              )
+              .map((p, index, array) => {
+                const prev = array[index - 1];
+                const isGap = prev && p - prev > 1;
+
+                return (
+                  <React.Fragment key={p}>
+                    {isGap && <span className="pagination-gap">...</span>}
                     <button
-                        onClick={() => handlePageChange(results.page + 1)}
-                        style={{ marginLeft: 8 }}
+                      onClick={() => handlePageChange(p)}
+                      className={p === results.page ? "active" : ""}
                     >
-                      Próxima
+                      {p}
                     </button>
-                )}
-              </div>
-            </>
-        )}
-      </div>
+                  </React.Fragment>
+                );
+              })}
+
+            {results.page * 10 < results.totalResults && (
+              <button onClick={() => handlePageChange(results.page + 1)}>
+                Próxima ▶
+              </button>
+            )}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 

@@ -1,0 +1,33 @@
+.searchContainer {
+    padding: 2rem;
+  }
+  
+  .searchBar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .searchBar input[type="text"] {
+    padding: 0.5rem;
+    width: 300px;
+    margin-right: 1rem;
+  }
+  
+  .searchBar button {
+    padding: 0.5rem 1rem;
+  }
+  
+  .results {
+    margin-top: 2rem;
+  }
+  
+  .results ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .results li {
+    margin-bottom: 1rem;
+  }
+  
