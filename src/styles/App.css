@@ -33,7 +33,7 @@ html, body, #root {
 h1 {
   font-family: 'Montserrat', sans-serif;
   font-size: 2.5rem;
-  color: #2c5d23;
+  color: #0E5C3E;
   text-align: center;
   margin-bottom: 1rem;
   letter-spacing: -1px;
@@ -211,26 +211,23 @@ h1 {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;  /* empurra o conteúdo para o topo */
+  justify-content: flex-start; /* Mantenha como flex-start */
   align-items: center;
   text-align: center;
-  padding: 40px 20px 20px;      /* adiciona um padding maior no topo para espaço */
+  padding: 200px 20px 20px; /* Altere este valor. Tente 100px, 120px, etc. */
   background-color: transparent;
 }
 
 
 
 .home-container h1 {
-  font-size: 3.5rem;          /* reduz um pouco o tamanho da fonte (de 3.5rem para 3rem) */
-  line-height: 1.1;         /* reduz o espaçamento vertical dentro da linha */
-  margin-bottom: 0px;      /* diminui o espaço abaixo do h1 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #2c5d23;
+  font-size: 3rem;
+  text-align: center;
+  color: #0E5C3E; /* tom novo do verde */
   font-family: 'Montserrat', sans-serif;
-  letter-spacing: -1px;
+  margin-bottom: 20px;
 }
+
 
 
 
@@ -284,12 +281,13 @@ h1 {
 }
 
 .logo {
-  height: 4.5em; /* altura igual ao tamanho da fonte do texto */
+  height: 9em;
   width: auto;
   filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.15));
-  display: inline-block; /* ou remova display para usar padrão inline */
-  margin: 0;
+  display: block;
+  margin: 10px auto;
 }
+
 
 
 

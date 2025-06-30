@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/App.css";
 
@@ -14,33 +14,28 @@ function Home() {
   };
 
   return (
-    <div className="home-container">
-      
-      <h1>
-        Bem-vindo ao 
-        <img
-          src={`${process.env.PUBLIC_URL}/logo.png`}
-          alt="Logo"
-          className="logo"
-        />
-      </h1>
-      <p className="home-description">
-        Esta é uma ferramenta para buscar informações relacionadas a matemática. Digite sua palavra-chave abaixo para começar sua pesquisa.
-      </p>
+      <div className="home-container">
+        <h1>Bem-vindo ao</h1>
 
-      <form onSubmit={handleSubmit} className="home-search-form">
-        <input
-          type="text"
-          placeholder="Digite sua busca..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="home-search-input"
+        <img
+            src={`${process.env.PUBLIC_URL}/logo.png`}
+            alt="Logo"
+            className="logo"
         />
-        <button type="submit" className="home-search-button">
-          Buscar
-        </button>
-      </form>
-    </div>
+
+        <form onSubmit={handleSubmit} className="home-search-form">
+          <input
+              type="text"
+              placeholder="Digite sua busca..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="home-search-input"
+          />
+          <button type="submit" className="home-search-button">
+            Buscar
+          </button>
+        </form>
+      </div>
   );
 }
 
